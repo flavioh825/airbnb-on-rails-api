@@ -12,16 +12,16 @@
 
 ActiveRecord::Schema.define(version: 2019_03_08_155255) do
 
-  create_table "images", force: :cascade do |t|
-    t.integer "property_id"
+  create_table "images", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "property_id"
     t.string "file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_images_on_property_id"
   end
 
-  create_table "properties", force: :cascade do |t|
-    t.integer "user_id"
+  create_table "properties", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
     t.string "title"
     t.string "address"
     t.decimal "price", precision: 15, scale: 2
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2019_03_08_155255) do
     t.index ["user_id"], name: "index_properties_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -62,4 +62,6 @@ ActiveRecord::Schema.define(version: 2019_03_08_155255) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "images", "properties"
+  add_foreign_key "properties", "users"
 end

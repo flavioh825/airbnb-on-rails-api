@@ -1,11 +1,11 @@
 class Api::V1::PropertiesController < ApplicationController
   def index
-    @properties = Property.all
-    render json: @properties
+    @properties = load_properties
+    render json: @properties, include: :images
   end
 
   def create
-    @property = Person.new(property_params)
+    @property = Property.new(property_params)
     if @property.save
       render json: @property
     else
@@ -38,7 +38,15 @@ class Api::V1::PropertiesController < ApplicationController
     Property.find(params[:id])
   end
 
+  def load_properties
+    Property.near_by(params[:latitude], params[:longitude], 10)
+  end
+
   def property_params
-    params.require(:property).permit(:user_id, :title, :address, :price, :latitude, :longitude)
+    params.require(:property).permit(:user_id, :title, :address, 
+                                     :price, :latitude, :longitude,
+                                     image_attributes: [
+                                      :property_id, :file
+                                     ])
   end
 end
